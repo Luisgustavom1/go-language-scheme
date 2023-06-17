@@ -7,15 +7,39 @@ Three main concepts:
 
 Those parts form like a "pipeline", where the code is treated and separated
 
+![Steps of a programming language](https://accu.org/journals/overload/26/145/balaam_2510/1.png)
+![One more diagram](https://res.cloudinary.com/practicaldev/image/fetch/s--IXUN2lFL--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/uploads/articles/b1d3fu7q6vw4o1ckpkst.png)
+
 ### Lexer
 Lexer is the element that takes the code and transform into tokens.
 
 Token is basically each char from our text, with a metadata assigned to it.
 
 Example:
-  
-![Steps of a programming language](https://accu.org/journals/overload/26/145/balaam_2510/1.png)
-![One more diagram](https://res.cloudinary.com/practicaldev/image/fetch/s--IXUN2lFL--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/uploads/articles/b1d3fu7q6vw4o1ckpkst.png)
+ 12 + (2 * 2)
+
+ Tokens -> 
+  value: 12
+  type: number
+
+  value: "+"
+  type: plus
+
+  value: "("
+  type: symbol
+
+  value: 2
+  type: number
+
+  value: "*"
+  type: multiplication
+
+  value: 2
+  type: number
+
+  value: ")"
+  type: symbol
+
 
 
 References:
