@@ -1,23 +1,24 @@
-package parser_test
+package parser
 
 import (
 	"testing"
 
 	"github.com/Luisgustavom1/go-language-scheme/core/lexer"
-	"github.com/Luisgustavom1/go-language-scheme/core/parser"
 	"github.com/stretchr/testify/assert"
 )
 
 func Test_parse(t *testing.T) {
 	tests := []struct {
 		input  string
-		output parser.Ast
+		pretty string
+		output Ast
 	}{
 		{
 			"(+ 1 2)",
-			parser.Ast{
+			"(+ 1 2 )",
+			Ast{
 				{
-					Kind: parser.LiteralValue,
+					Kind: LiteralValue,
 					Literal: &lexer.Token{
 						Value: "+",
 						Kind: lexer.SyntaxToken,
@@ -25,7 +26,7 @@ func Test_parse(t *testing.T) {
 					},
 				},
 				{
-					Kind:   parser.LiteralValue,
+					Kind:   LiteralValue,
 					Literal: &lexer.Token{
 						Value: "1",
 						Kind: lexer.SyntaxToken,
@@ -33,7 +34,7 @@ func Test_parse(t *testing.T) {
 					},
 				},
 				{
-					Kind:   parser.LiteralValue,
+					Kind:   LiteralValue,
 					Literal: &lexer.Token{
 						Value: "2",
 						Kind: lexer.SyntaxToken,
@@ -44,28 +45,29 @@ func Test_parse(t *testing.T) {
 		},
 		{
 			"(+ 1 (- 12 9))",
-			parser.Ast{
+			"(+ 1 (- 12 9 ) )",
+			Ast{
 				{
-					Kind: parser.LiteralValue,
+					Kind: LiteralValue,
 					Literal: &lexer.Token{Value: "+"},
 				},
 				{
-					Kind: parser.LiteralValue,
+					Kind: LiteralValue,
 					Literal: &lexer.Token{Value: "1"},
 				},
 				{
-					Kind: parser.ListValue,
-					List: &parser.Ast{
-						parser.AstValue{
-							Kind:    parser.LiteralValue,
+					Kind: ListValue,
+					List: &Ast{
+						AstValue{
+							Kind:    LiteralValue,
 							Literal: &lexer.Token{Value: "-"},
 						},
-						parser.AstValue{
-							Kind:    parser.LiteralValue,
+						AstValue{
+							Kind:    LiteralValue,
 							Literal: &lexer.Token{Value: "12"},
 						},
-						parser.AstValue{
-							Kind:    parser.LiteralValue,
+						AstValue{
+							Kind:    LiteralValue,
 							Literal: &lexer.Token{Value: "9"},
 						},
 					},
@@ -74,89 +76,91 @@ func Test_parse(t *testing.T) {
 		},
 		{
 			"(+ 1 (- 12 9) 12)",
-			parser.Ast{
+			"(+ 1 (- 12 9 ) 12 )",
+			Ast{
 				{
-					Kind: parser.LiteralValue,
+					Kind: LiteralValue,
 					Literal: &lexer.Token{Value: "+"},
 				},
 				{
-					Kind: parser.LiteralValue,
+					Kind: LiteralValue,
 					Literal: &lexer.Token{Value: "1"},
 				},
 				{
-					Kind: parser.ListValue,
-					List: &parser.Ast{
-						parser.AstValue{
-							Kind:    parser.LiteralValue,
+					Kind: ListValue,
+					List: &Ast{
+						AstValue{
+							Kind:    LiteralValue,
 							Literal: &lexer.Token{Value: "-"},
 						},
-						parser.AstValue{
-							Kind:    parser.LiteralValue,
+						AstValue{
+							Kind:    LiteralValue,
 							Literal: &lexer.Token{Value: "12"},
 						},
-						parser.AstValue{
-							Kind:    parser.LiteralValue,
+						AstValue{
+							Kind:    LiteralValue,
 							Literal: &lexer.Token{Value: "9"},
 						},
 					},
 				},
 				{
-					Kind: parser.LiteralValue,
+					Kind: LiteralValue,
 					Literal: &lexer.Token{Value: "12"},
 				},
 			},
 		},
 		{
 			"(+ 1 (- 12 9) 4 (+ 76 1 ) 13)",
-			parser.Ast{
+			"(+ 1 (- 12 9 ) 4 (+ 76 1 ) 13 )",
+			Ast{
 				{
-					Kind: parser.LiteralValue,
+					Kind: LiteralValue,
 					Literal: &lexer.Token{Value: "+"},
 				},
 				{
-					Kind: parser.LiteralValue,
+					Kind: LiteralValue,
 					Literal: &lexer.Token{Value: "1"},
 				},
 				{
-					Kind: parser.ListValue,
-					List: &parser.Ast{
-						parser.AstValue{
-							Kind:    parser.LiteralValue,
+					Kind: ListValue,
+					List: &Ast{
+						AstValue{
+							Kind:    LiteralValue,
 							Literal: &lexer.Token{Value: "-"},
 						},
-						parser.AstValue{
-							Kind:    parser.LiteralValue,
+						AstValue{
+							Kind:    LiteralValue,
 							Literal: &lexer.Token{Value: "12"},
 						},
-						parser.AstValue{
-							Kind:    parser.LiteralValue,
+						AstValue{
+							Kind:    LiteralValue,
 							Literal: &lexer.Token{Value: "9"},
 						},
 					},
 				},
 				{
-					Kind: parser.LiteralValue,
+					Kind: LiteralValue,
 					Literal: &lexer.Token{Value: "4"},
 				},
 				{
-					Kind: parser.ListValue,
-					List: &parser.Ast{
-						parser.AstValue{
-							Kind:    parser.LiteralValue,
+					Kind: ListValue,
+					List: &Ast{
+						AstValue{
+							Kind:    LiteralValue,
 							Literal: &lexer.Token{Value: "+"},
 						},
-						parser.AstValue{
-							Kind:    parser.LiteralValue,
+						AstValue{
+							Kind:    LiteralValue,
 							Literal: &lexer.Token{Value: "76"},
 						},
-						parser.AstValue{
-							Kind:    parser.LiteralValue,
+						AstValue{
+							Kind:    LiteralValue,
 							Literal: &lexer.Token{Value: "1"},
 						},
 					},
 				},
 				{
-					Kind: parser.LiteralValue,
+					Kind: LiteralValue,
 					Literal: &lexer.Token{Value: "13"},
 				},
 			},
@@ -165,13 +169,14 @@ func Test_parse(t *testing.T) {
 
 	for _, test := range tests {
 		tokens := lexer.Lexer([]rune(test.input))
-		ast, _ := parser.Parse(tokens, 0)
+		ast, _ := Parse(tokens, 0)
 
 		assert.True(t, compareAst(ast, test.output))
+		assert.Equal(t, ast.pretty(), test.pretty)
 	}
 }
 
-func compareAst(a parser.Ast, b parser.Ast) bool {
+func compareAst(a Ast, b Ast) bool {
 	if len(a) != len(b) {
 		return false
 	}
@@ -185,12 +190,12 @@ func compareAst(a parser.Ast, b parser.Ast) bool {
 	return true
 }
 
-func compareValue(a parser.AstValue, b parser.AstValue) bool {
+func compareValue(a AstValue, b AstValue) bool {
 	if a.Kind != b.Kind {
 		return false
 	}
 
-	if a.Kind == parser.LiteralValue {
+	if a.Kind == LiteralValue {
 		return a.Literal.Value == b.Literal.Value
 	}
 
