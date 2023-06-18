@@ -1,10 +1,8 @@
-package lexer_test
+package lexer
 
 import (
 	"testing"
 
-	"github.com/Luisgustavom1/go-language-scheme/core/lexer"
-	"github.com/Luisgustavom1/go-language-scheme/core/models"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -36,10 +34,11 @@ func Test_lexIntegerToken(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		cursor, token := lexer.LexIntegerToken([]rune(test.source), test.cursor)
+		cursor, token := LexIntegerToken([]rune(test.source), test.cursor)
+		
 		assert.Equal(t, cursor, test.expectedCursor)
 		assert.Equal(t, token.Value, test.expectedValue)
-		assert.Equal(t, token.Kind, models.IntegerToken)
+		assert.Equal(t, token.Kind, IntegerToken)
 	}
 }
 
@@ -71,44 +70,45 @@ func Test_lexIdentifierToken(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		cursor, token := lexer.LexIdentifierToken([]rune(test.source), test.cursor)
+		cursor, token := LexIdentifierToken([]rune(test.source), test.cursor)
+
 		assert.Equal(t, cursor, test.expectedCursor)
 		assert.Equal(t, token.Value, test.expectedValue)
-		assert.Equal(t, token.Kind, models.IdentifierToken)
+		assert.Equal(t, token.Kind, IdentifierToken)
 	}
 }
 
 func Test_lexer(t *testing.T) {
 	tests := []struct {
 		source string
-		tokens []lexer.Token
+		tokens []Token
 	}{
 		{
 			source: " ( + 13 2  ) ",
-			tokens: []lexer.Token{
+			tokens: []Token{
 				{
 					Value:    "(",
-					Kind:     models.SyntaxToken,
+					Kind:     SyntaxToken,
 					Location: 1,
 				},
 				{
 					Value:    "+",
-					Kind:     models.IdentifierToken,
+					Kind:     IdentifierToken,
 					Location: 3,
 				},
 				{
 					Value:    "13",
-					Kind:     models.IntegerToken,
+					Kind:     IntegerToken,
 					Location: 5,
 				},
 				{
 					Value:    "2",
-					Kind:     models.IntegerToken,
+					Kind:     IntegerToken,
 					Location: 8,
 				},
 				{
 					Value:    ")",
-					Kind:     models.SyntaxToken,
+					Kind:     SyntaxToken,
 					Location: 11,
 				},
 			},
@@ -116,7 +116,7 @@ func Test_lexer(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		tokens := lexer.Lexer([]rune(test.source))
+		tokens := Lexer([]rune(test.source))
 
 		for i, token := range tokens {
 			assert.Equal(t, token.Value, tokens[i].Value)
