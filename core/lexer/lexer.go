@@ -2,13 +2,11 @@ package lexer
 
 import (
 	"unicode"
-
-	"github.com/Luisgustavom1/go-language-scheme/core/models"
 )
 
-func Lexer(sourceCode []rune) []models.Token {
-	tokens := []models.Token{}
-	var tokenTemp *models.Token
+func Lexer(sourceCode []rune) []Token {
+	tokens := []Token{}
+	var tokenTemp *Token
 
 	cursor := 0
 	for cursor < len(sourceCode) {
@@ -54,11 +52,11 @@ func skipWhitespace(sourceCode []rune, cursor int) int {
 	return cursor
 }
 
-func LexSyntaxToken(sourceCode []rune, cursor int) (int, *models.Token) {
+func LexSyntaxToken(sourceCode []rune, cursor int) (int, *Token) {
 	if sourceCode[cursor] == '(' || sourceCode[cursor] == ')' {
-		return cursor + 1, &models.Token{
+		return cursor + 1, &Token{
 			Value:    string([]rune{sourceCode[cursor]}),
-			Kind:     models.SyntaxToken,
+			Kind:     SyntaxToken,
 			Location: cursor,
 		}
 	}
@@ -66,7 +64,7 @@ func LexSyntaxToken(sourceCode []rune, cursor int) (int, *models.Token) {
 	return cursor, nil
 }
 
-func LexIntegerToken(sourceCode []rune, cursor int) (int, *models.Token) {
+func LexIntegerToken(sourceCode []rune, cursor int) (int, *Token) {
 	originalCursor := cursor
 
 	values := []rune{}
@@ -86,14 +84,14 @@ func LexIntegerToken(sourceCode []rune, cursor int) (int, *models.Token) {
 		return originalCursor, nil
 	}
 
-	return cursor, &models.Token{
+	return cursor, &Token{
 		Value:    string(values),
-		Kind:     models.IntegerToken,
+		Kind:     IntegerToken,
 		Location: originalCursor,
 	}
 }
 
-func LexIdentifierToken(sourceCode []rune, cursor int) (int, *models.Token) {
+func LexIdentifierToken(sourceCode []rune, cursor int) (int, *Token) {
 	originalCursor := cursor
 
 	values := []rune{}
@@ -113,9 +111,9 @@ func LexIdentifierToken(sourceCode []rune, cursor int) (int, *models.Token) {
 		return originalCursor, nil
 	}
 
-	return cursor, &models.Token{
+	return cursor, &Token{
 		Value:    string(values),
-		Kind:     models.IdentifierToken,
+		Kind:     IdentifierToken,
 		Location: originalCursor,
 	}
 }

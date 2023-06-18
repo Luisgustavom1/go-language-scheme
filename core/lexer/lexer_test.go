@@ -81,11 +81,11 @@ func Test_lexIdentifierToken(t *testing.T) {
 func Test_lexer(t *testing.T) {
 	tests := []struct {
 		source string
-		tokens []models.Token
+		tokens []lexer.Token
 	}{
 		{
 			source: " ( + 13 2  ) ",
-			tokens: []models.Token{
+			tokens: []lexer.Token{
 				{
 					Value:    "(",
 					Kind:     models.SyntaxToken,
