@@ -71,7 +71,7 @@ AST allows us to make a platform-agnostic analysis of our program, since it has 
 ![How parser step works](https://github.com/Luisgustavom1/go-language-scheme/assets/65229051/80e650ca-08ae-4fdc-8638-89072c663a2d)
 
 References:
-  - https://github.com/eatonphil/livescheme
+  - Tutorial followed -> https://github.com/eatonphil/livescheme
   - https://dev.to/codingwithadam/introduction-to-lexers-parsers-and-interpreters-with-chevrotain-5c7b
   - https://accu.org/journals/overload/26/145/balaam_2510/
   - https://www.twilio.com/blog/abstract-syntax-trees
