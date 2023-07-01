@@ -75,7 +75,8 @@ AST allows us to make a platform-agnostic analysis of our program, since it has 
 
 ## Interpreter (Evaluator)
 In this step we will transversing under our AST, interpreter it, that is, we will take each token sub tree or a set of tokens and evaluate what value your interaction produces.
-Interaction between tokens of type syntax, integer, identifier, etc. This list depends on the complexity of the language
+
+Interaction between tokens of type syntax, integer, identifier, etc. This list depends on the complexity of the language.
 
 Evaluation is the process that infer an value of a some calculation.
 
