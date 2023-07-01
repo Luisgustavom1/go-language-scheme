@@ -78,7 +78,7 @@ In this step we will transversing under our AST, interpreter it, that is, we wil
 
 Interaction between tokens of type syntax, integer, identifier, etc. This list depends on the complexity of the language.
 
-Evaluation is the process that infer an value of a some calculation.
+Evaluation is the process that infer an value of a some calculation or in our language the result of the expressions
 
 References:
   - https://martinfowler.com/dsl.html
