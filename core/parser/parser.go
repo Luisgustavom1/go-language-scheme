@@ -37,21 +37,20 @@ func Parse(tokens []lexer.Token, index int) (Ast, int) {
 	return ast, index
 }
 
-func (a Ast) pretty() string {
+func (a Ast) Pretty() string {
 	p := "("
 	for _, value := range a {
-		p += value.pretty()
+		p += value.Pretty()
 		p += " "
 	}
 
 	return p + ")"
 }
 
-
-func (v AstValue) pretty() string {
+func (v AstValue) Pretty() string {
 	if v.Kind == LiteralValue {
 		return v.Literal.Value
 	}
 
-	return v.List.pretty()
+	return v.List.Pretty()
 }

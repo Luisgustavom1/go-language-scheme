@@ -10,7 +10,7 @@ import (
 func Test_parse(t *testing.T) {
 	tests := []struct {
 		input  string
-		pretty string
+		Pretty string
 		output Ast
 	}{
 		{
@@ -172,7 +172,7 @@ func Test_parse(t *testing.T) {
 		ast, _ := Parse(tokens, 0)
 
 		assert.True(t, compareAst(ast, test.output))
-		assert.Equal(t, ast.pretty(), test.pretty)
+		assert.Equal(t, ast.Pretty(), test.Pretty)
 	}
 }
 
