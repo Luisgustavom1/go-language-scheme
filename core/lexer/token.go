@@ -9,7 +9,10 @@ type Token struct {
 type TokenKind uint
 
 const (
+	// "(", ")"
 	SyntaxToken TokenKind = iota
+	// "1", "34"
 	IntegerToken
+	// "+", "define"
 	IdentifierToken
 )
