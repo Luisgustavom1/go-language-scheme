@@ -2,6 +2,7 @@ package interpreter
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 
 	"github.com/Luisgustavom1/go-language-scheme/core/lexer"
@@ -41,6 +42,14 @@ func InitializeBuiltIns() {
 		return value
 	}
 
+	builtIns["<"] = func(args parser.Ast, ctx Context) any {
+		return AstEvaluator(args[0], ctx).(int64) < AstEvaluator(args[1], ctx).(int64)
+	}
+
+	builtIns[">"] = func(args parser.Ast, ctx Context) any {
+		return AstEvaluator(args[0], ctx).(int64) > AstEvaluator(args[1], ctx).(int64)
+	}
+
 	builtIns["begin"] = func(args parser.Ast, ctx Context) any {
 		var last any
 		for _, arg := range args {
@@ -48,13 +57,13 @@ func InitializeBuiltIns() {
 		}
 
 		return last
-	} 
+	}
 
 	builtIns["func"] = func(args parser.Ast, ctx Context) any {
 		functionName := (*args[0].Literal).Value
 		params := *args[1].List
 		body := *args[2].List
-			
+
 		ctx[functionName] = func(args []any, ctx Context) any {
 			if len(params) != len(args) {
 				panic(fmt.Sprintf("Expected %d args to `%s`, got %d", len(params), functionName, len(args)))
@@ -63,7 +72,7 @@ func InitializeBuiltIns() {
 			functionCtx := copyContext(ctx)
 
 			for i, param := range params {
-				functionCtx[(*param.Literal).Value] = args[i] 
+				functionCtx[(*param.Literal).Value] = args[i]
 			}
 
 			return InitAstWalk(body, functionCtx)
@@ -111,9 +120,13 @@ func InitAstWalk(ast parser.Ast, ctx Context) interface{} {
 		return function(ast[1:], ctx)
 	}
 
-	userDefinedFunction := ctx[functionName].(func([]any, Context) any)
+	userDefinedFunction, ok := ctx[functionName].(func([]any, Context) any)
+	if !ok {
+		(*ast[0].Literal).Debug(fmt.Sprintf("Expected function, receive %s", functionName))
+		os.Exit(1)
+	}
 
-	var args []any 
+	var args []any
 	for _, unevaluatedArg := range ast[1:] {
 		args = append(args, AstEvaluator(unevaluatedArg, ctx))
 	}
