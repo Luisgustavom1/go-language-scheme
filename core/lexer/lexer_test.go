@@ -6,6 +6,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func makeLexingContext(source []rune) LexingContext {
+	return LexingContext{
+		Source:         source,
+		SourceFileName: "<memory>",
+	}
+}
+
 func Test_lexIntegerToken(t *testing.T) {
 	tests := []struct {
 		source         string
@@ -34,8 +41,9 @@ func Test_lexIntegerToken(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		cursor, token := LexIntegerToken([]rune(test.source), test.cursor)
-		
+		lc := makeLexingContext([]rune(test.source))
+		cursor, token := lc.LexIntegerToken(test.cursor)
+
 		assert.Equal(t, cursor, test.expectedCursor)
 		assert.Equal(t, token.Value, test.expectedValue)
 		assert.Equal(t, token.Kind, IntegerToken)
@@ -70,7 +78,8 @@ func Test_lexIdentifierToken(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		cursor, token := LexIdentifierToken([]rune(test.source), test.cursor)
+		lc := makeLexingContext([]rune(test.source))
+		cursor, token := lc.LexIdentifierToken(test.cursor)
 
 		assert.Equal(t, cursor, test.expectedCursor)
 		assert.Equal(t, token.Value, test.expectedValue)
@@ -116,12 +125,12 @@ func Test_lexer(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		tokens := Lexer([]rune(test.source))
+		lc := makeLexingContext([]rune(test.source))
+		tokens := lc.Lexer()
 
 		for i, token := range tokens {
-			assert.Equal(t, token.Value, tokens[i].Value)
-			assert.Equal(t, token.Kind, tokens[i].Kind)
-			assert.Equal(t, token.Location, tokens[i].Location)
+			token.LexingContext = test.tokens[i].LexingContext
+			assert.Equal(t, token, test.tokens[i])
 		}
 	}
 }

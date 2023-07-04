@@ -20,24 +20,24 @@ func Test_parse(t *testing.T) {
 				{
 					Kind: LiteralValue,
 					Literal: &lexer.Token{
-						Value: "+",
-						Kind: lexer.SyntaxToken,
+						Value:    "+",
+						Kind:     lexer.SyntaxToken,
 						Location: 0,
 					},
 				},
 				{
-					Kind:   LiteralValue,
+					Kind: LiteralValue,
 					Literal: &lexer.Token{
-						Value: "1",
-						Kind: lexer.SyntaxToken,
+						Value:    "1",
+						Kind:     lexer.SyntaxToken,
 						Location: 3,
 					},
 				},
 				{
-					Kind:   LiteralValue,
+					Kind: LiteralValue,
 					Literal: &lexer.Token{
-						Value: "2",
-						Kind: lexer.SyntaxToken,
+						Value:    "2",
+						Kind:     lexer.SyntaxToken,
 						Location: 5,
 					},
 				},
@@ -48,11 +48,11 @@ func Test_parse(t *testing.T) {
 			"(+ 1 (- 12 9 ) )",
 			Ast{
 				{
-					Kind: LiteralValue,
+					Kind:    LiteralValue,
 					Literal: &lexer.Token{Value: "+"},
 				},
 				{
-					Kind: LiteralValue,
+					Kind:    LiteralValue,
 					Literal: &lexer.Token{Value: "1"},
 				},
 				{
@@ -79,11 +79,11 @@ func Test_parse(t *testing.T) {
 			"(+ 1 (- 12 9 ) 12 )",
 			Ast{
 				{
-					Kind: LiteralValue,
+					Kind:    LiteralValue,
 					Literal: &lexer.Token{Value: "+"},
 				},
 				{
-					Kind: LiteralValue,
+					Kind:    LiteralValue,
 					Literal: &lexer.Token{Value: "1"},
 				},
 				{
@@ -104,7 +104,7 @@ func Test_parse(t *testing.T) {
 					},
 				},
 				{
-					Kind: LiteralValue,
+					Kind:    LiteralValue,
 					Literal: &lexer.Token{Value: "12"},
 				},
 			},
@@ -114,11 +114,11 @@ func Test_parse(t *testing.T) {
 			"(+ 1 (- 12 9 ) 4 (+ 76 1 ) 13 )",
 			Ast{
 				{
-					Kind: LiteralValue,
+					Kind:    LiteralValue,
 					Literal: &lexer.Token{Value: "+"},
 				},
 				{
-					Kind: LiteralValue,
+					Kind:    LiteralValue,
 					Literal: &lexer.Token{Value: "1"},
 				},
 				{
@@ -139,7 +139,7 @@ func Test_parse(t *testing.T) {
 					},
 				},
 				{
-					Kind: LiteralValue,
+					Kind:    LiteralValue,
 					Literal: &lexer.Token{Value: "4"},
 				},
 				{
@@ -160,7 +160,7 @@ func Test_parse(t *testing.T) {
 					},
 				},
 				{
-					Kind: LiteralValue,
+					Kind:    LiteralValue,
 					Literal: &lexer.Token{Value: "13"},
 				},
 			},
@@ -168,7 +168,11 @@ func Test_parse(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		tokens := lexer.Lexer([]rune(test.input))
+		lc := lexer.LexingContext{
+			Source:         []rune(test.input),
+			SourceFileName: "<memory>",
+		}
+		tokens := lc.Lexer()
 		ast, _ := Parse(tokens, 0)
 
 		assert.True(t, compareAst(ast, test.output))

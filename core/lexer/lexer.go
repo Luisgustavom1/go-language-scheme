@@ -1,33 +1,46 @@
 package lexer
 
 import (
+	"os"
 	"unicode"
 )
 
-func Lexer(sourceCode []rune) []Token {
+func NewLexingContext(file string) LexingContext {
+	sourceCode, err := os.ReadFile(file)
+	if err != nil {
+		panic(err)
+	}
+
+	return LexingContext{
+		SourceFileName: file,
+		Source:         []rune(string(sourceCode)),
+	}
+}
+
+func (lc LexingContext) Lexer() []Token {
 	tokens := []Token{}
 	var tokenTemp *Token
 
 	cursor := 0
-	for cursor < len(sourceCode) {
-		cursor = skipWhitespace(sourceCode, cursor)
-		if cursor == len(sourceCode) {
+	for cursor < len(lc.Source) {
+		cursor = skipWhitespace(lc.Source, cursor)
+		if cursor == len(lc.Source) {
 			break
 		}
 
-		cursor, tokenTemp = LexSyntaxToken(sourceCode, cursor)
+		cursor, tokenTemp = lc.LexSyntaxToken(cursor)
 		if tokenTemp != nil {
 			tokens = append(tokens, *tokenTemp)
 			continue
 		}
 
-		cursor, tokenTemp = LexIntegerToken(sourceCode, cursor)
+		cursor, tokenTemp = lc.LexIntegerToken(cursor)
 		if tokenTemp != nil {
 			tokens = append(tokens, *tokenTemp)
 			continue
 		}
 
-		cursor, tokenTemp = LexIdentifierToken(sourceCode, cursor)
+		cursor, tokenTemp = lc.LexIdentifierToken(cursor)
 		if tokenTemp != nil {
 			tokens = append(tokens, *tokenTemp)
 			continue
@@ -52,24 +65,25 @@ func skipWhitespace(sourceCode []rune, cursor int) int {
 	return cursor
 }
 
-func LexSyntaxToken(sourceCode []rune, cursor int) (int, *Token) {
-	if sourceCode[cursor] == '(' || sourceCode[cursor] == ')' {
+func (lc LexingContext) LexSyntaxToken(cursor int) (int, *Token) {
+	if lc.Source[cursor] == '(' || lc.Source[cursor] == ')' {
 		return cursor + 1, &Token{
-			Value:    string([]rune{sourceCode[cursor]}),
-			Kind:     SyntaxToken,
-			Location: cursor,
+			Value:         string([]rune{lc.Source[cursor]}),
+			Kind:          SyntaxToken,
+			Location:      cursor,
+			LexingContext: lc,
 		}
 	}
 
 	return cursor, nil
 }
 
-func LexIntegerToken(sourceCode []rune, cursor int) (int, *Token) {
+func (lc LexingContext) LexIntegerToken(cursor int) (int, *Token) {
 	originalCursor := cursor
 
 	values := []rune{}
-	for cursor < len(sourceCode) {
-		r := sourceCode[cursor]
+	for cursor < len(lc.Source) {
+		r := lc.Source[cursor]
 
 		if r >= '0' && r <= '9' {
 			values = append(values, r)
@@ -85,18 +99,19 @@ func LexIntegerToken(sourceCode []rune, cursor int) (int, *Token) {
 	}
 
 	return cursor, &Token{
-		Value:    string(values),
-		Kind:     IntegerToken,
-		Location: originalCursor,
+		Value:         string(values),
+		Kind:          IntegerToken,
+		Location:      originalCursor,
+		LexingContext: lc,
 	}
 }
 
-func LexIdentifierToken(sourceCode []rune, cursor int) (int, *Token) {
+func (lc LexingContext) LexIdentifierToken(cursor int) (int, *Token) {
 	originalCursor := cursor
 
 	values := []rune{}
-	for cursor < len(sourceCode) {
-		r := sourceCode[cursor]
+	for cursor < len(lc.Source) {
+		r := lc.Source[cursor]
 
 		if !unicode.IsSpace(r) && r != ')' {
 			values = append(values, r)
@@ -112,8 +127,9 @@ func LexIdentifierToken(sourceCode []rune, cursor int) (int, *Token) {
 	}
 
 	return cursor, &Token{
-		Value:    string(values),
-		Kind:     IdentifierToken,
-		Location: originalCursor,
+		Value:         string(values),
+		Kind:          IdentifierToken,
+		Location:      originalCursor,
+		LexingContext: lc,
 	}
 }

@@ -10,17 +10,14 @@ import (
 )
 
 func main() {
-	sourceCode, err := os.ReadFile(os.Args[1])
-	if err != nil {
-		panic(err)
-	}
+	lc := lexer.NewLexingContext(os.Args[1])
 
-	tokens := lexer.Lexer([]rune(string(sourceCode)))
+	tokens := lc.Lexer()
 
 	var parseIndex int
 	var ast = parser.Ast{
 		{
-			Kind: parser.LiteralValue,
+			Kind:    parser.LiteralValue,
 			Literal: &lexer.Token{Value: "begin"},
 		},
 	}
@@ -33,7 +30,7 @@ func main() {
 		})
 
 		parseIndex = nextIndex
-	} 
+	}
 
 	// Optimizations
 	// Type checking

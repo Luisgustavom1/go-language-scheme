@@ -1,6 +1,8 @@
 package parser
 
 import (
+	"os"
+
 	"github.com/Luisgustavom1/go-language-scheme/core/lexer"
 )
 
@@ -32,6 +34,12 @@ func Parse(tokens []lexer.Token, index int) (Ast, int) {
 			Literal: &token,
 		})
 		index++
+	}
+
+	lastToken := tokens[index-1]
+	if lastToken.Kind == lexer.SyntaxToken && lastToken.Value != ")" {
+		lastToken.Debug("Expected closing paren")
+		os.Exit(1)
 	}
 
 	return ast, index
