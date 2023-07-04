@@ -38,5 +38,5 @@ func main() {
 
 	interpreter.InitializeBuiltIns()
 	value := interpreter.InitAstWalk(ast, map[string]any{})
-	fmt.Println("Result: ", value)
+	fmt.Println(value)
 }
